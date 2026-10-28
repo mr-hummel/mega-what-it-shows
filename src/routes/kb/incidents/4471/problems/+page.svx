@@ -1,0 +1,56 @@
+---
+layout: runbook
+title: '#4471 · three problems, one ticket'
+owner: mr-hummel
+status: open
+reviewed: 2026-10-28
+signature: mr-hummel
+---
+
+<script>
+  import ProblemTable from '#lib/kb/ProblemTable.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+</script>
+
+[#4471](/kb/incidents/4471) is marked known: one issue, one fix queued. Its reports say otherwise.
+They are three problems, and the queued parser fix closes only the first.
+
+<Callout kind="warn">
+Fixing the parser will not stop the reports. The booking-v3 form and the one-day moves have causes of
+their own, and each now has its own ticket.
+</Callout>
+
+## What #4471 holds
+
+<ProblemTable
+  ticket={4471}
+  issues={{
+    parser: 'https://github.com/mr-hummel/mega-what-it-shows/issues/1',
+    hint: 'https://github.com/mr-hummel/mega-what-it-shows/issues/2',
+    'one-day': 'https://github.com/mr-hummel/mega-what-it-shows/issues/3',
+  }}
+/>
+
+- **`parser`**: the shared parser reads every date month first, and every tenant writes the day
+  first. Any date with a day of 12 or less comes out with day and month swapped.
+- **`hint`**: the booking-v3 form prints `MM/DD/YYYY` under its date field. People type month first,
+  as told, and the form reads the date day first. Only the form at booking-v3 tenants does this.
+- **`one-day`**: the reports the desk already read as a one-day move. A date moves by one day,
+  not by a swap: one meeting on two days in two time zones, an invite sent before its booking.
+
+## Why they were merged
+
+[Decision 0001](/kb/decisions/0001-dedupe-by-subject) merges reports whose subject lines match.
+The subject says what people saw, a wrong day. It does not say why the day was wrong, so all three
+problems arrived under the same subjects. Intake's tag does not separate them either: it
+follows the reporter's browser, not the tenant.
+
+## For the desk
+
+- When a report is about a date, file it by tenant and channel, as [triage](/kb/triage/dedupe)
+  already shows. Form reports from a booking-v3 tenant go to the hint ticket.
+- A date off by one day is not a swap. File it with the one-day moves.
+- #4471 stays the parser ticket. The table above recounts it from the data on every render.
+
+<RenderStamp {signature} />
