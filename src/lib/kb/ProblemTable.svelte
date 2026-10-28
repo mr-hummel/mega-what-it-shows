@@ -5,8 +5,9 @@
   import { tenantOf } from '#lib/kb/locales';
   import { alsoIn, groupByProblem, mergedInto, mistagged, sharedSubjects, type Problem } from '#lib/kb/problems';
 
-  // issues: the engineering ticket for each problem, by problem.
-  let { ticket, issues }: { ticket: number; issues: Partial<Record<Problem, string>> } = $props();
+  // issues: the engineering ticket for each problem, by problem, with where engineering left it.
+  type Issue = { href: string; state: 'open' | 'fixed' | "won't fix" };
+  let { ticket, issues }: { ticket: number; issues: Partial<Record<Problem, Issue>> } = $props();
 
   const merged = $derived(mergedInto(reports as Report[], ticket));
   const groups = $derived(groupByProblem(merged, tenantOf, notes.oneDayMove));
@@ -27,18 +28,20 @@
 
 <table>
   <thead>
-    <tr><th>problem</th><th>reports</th><th>channels</th><th>tenants</th><th>seen</th><th>ticket</th></tr>
+    <tr><th>problem</th><th>reports</th><th>channels</th><th>tenants</th><th>seen</th><th>ticket · state</th></tr>
   </thead>
   <tbody>
     {#each groups as g (g.problem)}
-      <tr class:open={!issueOf(g.problem)}>
+      <tr class:open={(issueOf(g.problem)?.state ?? 'open') === 'open'}>
         <td><code>{g.problem}</code></td>
         <td>{g.reports.length}</td>
         <td class="tags">{channels(g.channels)}</td>
         <td>{g.tenants}</td>
         <td>{g.firstSeen} → {g.lastSeen}</td>
         <td>
-          {#if issueOf(g.problem)}<a href={issueOf(g.problem)}>#{number(issueOf(g.problem)!)}</a>{:else}no ticket yet{/if}
+          {#if issueOf(g.problem)}
+            <a href={issueOf(g.problem)!.href}>#{number(issueOf(g.problem)!.href)}</a> · {issueOf(g.problem)!.state}
+          {:else}no ticket yet{/if}
         </td>
       </tr>
     {/each}

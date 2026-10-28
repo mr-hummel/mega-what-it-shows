@@ -13,12 +13,12 @@ signature: mr-hummel
   import RenderStamp from '#lib/kb/RenderStamp.svelte';
 </script>
 
-[#4471](/kb/incidents/4471) is marked known: one issue, one fix queued. Its reports say otherwise.
-They are three problems, and the queued parser fix closes only the first.
+[#4471](/kb/incidents/4471) was merged as one issue and closed on 5 October. Its reports hold three
+problems, and engineering closed two of them.
 
 <Callout kind="warn">
-Fixing the parser will not stop the reports. The booking-v3 form and the one-day moves have causes of
-their own, and each now has its own ticket.
+The one-day moves are still open. Nothing in the parser fix or the form's retirement touches them: a
+date that moves by one day is not a day/month swap. Keep #3 open and file new one-day reports there.
 </Callout>
 
 ## What #4471 holds
@@ -26,18 +26,21 @@ their own, and each now has its own ticket.
 <ProblemTable
   ticket={4471}
   issues={{
-    parser: 'https://github.com/mr-hummel/mega-what-it-shows/issues/1',
-    hint: 'https://github.com/mr-hummel/mega-what-it-shows/issues/2',
-    'one-day': 'https://github.com/mr-hummel/mega-what-it-shows/issues/3',
+    parser: { href: 'https://github.com/mr-hummel/mega-what-it-shows/issues/1', state: 'fixed' },
+    hint: { href: 'https://github.com/mr-hummel/mega-what-it-shows/issues/2', state: "won't fix" },
+    'one-day': { href: 'https://github.com/mr-hummel/mega-what-it-shows/issues/3', state: 'open' },
   }}
 />
 
 - **`parser`**: the shared parser reads every date month first, and every tenant writes the day
-  first. Any date with a day of 12 or less comes out with day and month swapped.
+  first. Any date with a day of 12 or less comes out with day and month swapped. Fixed:
+  `fix(dates): parse dd/mm for eu locales`.
 - **`hint`**: the booking-v3 form prints `MM/DD/YYYY` under its date field. People type month first,
   as told, and the form reads the date day first. Only the form at booking-v3 tenants does this.
+  Won't fix: the booking-v3 form is retired.
 - **`one-day`**: the reports the desk already read as a one-day move. A date moves by one day,
   not by a swap: one meeting on two days in two time zones, an invite sent before its booking.
+  No fix yet.
 
 ## Why they were merged
 
@@ -49,8 +52,10 @@ follows the reporter's browser, not the tenant.
 ## For the desk
 
 - When a report is about a date, file it by tenant and channel, as [triage](/kb/triage/dedupe)
-  already shows. Form reports from a booking-v3 tenant go to the hint ticket.
+  already shows, not by subject.
 - A date off by one day is not a swap. File it with the one-day moves.
-- #4471 stays the parser ticket. The table above recounts it from the data on every render.
+- A swapped date reported after 5 October means a fix did not hold. Open a new ticket for it and
+  link #4471.
+- The table above recounts #4471 from the data on every render.
 
 <RenderStamp {signature} />
