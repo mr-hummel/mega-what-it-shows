@@ -4,7 +4,7 @@ title: '#4471 · three problems, one ticket'
 owner: mr-hummel
 status: open
 reviewed: 2026-10-28
-signature: mr-hummel
+signature: v1.eyJzdWIiOiIxODM2IiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYXQiOjE3OTMyMTA3ODEsImV4cCI6MTc5MzI5NzE4MX0.7Gi0kVpo2Zh-asENnOhLKu5vN_MN9z1J7Tao0ezvx8I
 ---
 
 <script>
