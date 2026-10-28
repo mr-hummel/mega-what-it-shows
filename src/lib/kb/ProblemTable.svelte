@@ -3,7 +3,7 @@
   import notes from '#lib/data/desk-notes.json';
   import type { Report } from '#lib/kb/causes';
   import { tenantOf } from '#lib/kb/locales';
-  import { groupByProblem, mergedInto, mistagged, sharedSubjects, type Problem } from '#lib/kb/problems';
+  import { alsoIn, groupByProblem, mergedInto, mistagged, sharedSubjects, type Problem } from '#lib/kb/problems';
 
   // issues: the engineering ticket for each problem, by problem.
   let { ticket, issues }: { ticket: number; issues: Partial<Record<Problem, string>> } = $props();
@@ -45,9 +45,16 @@
   </tbody>
 </table>
 
+{#if alsoIn(groups, 'one-day', 'parser')}
+  <p class="note">
+    {alsoIn(groups, 'one-day', 'parser')} of the <code>parser</code> reports read as a one-day move: counted under
+    <code>parser</code> by tenant, as the desk files them, and ticketed as <code>one-day</code>.
+  </p>
+{/if}
+
 <p class="note">
   {sharedSubjects(groups)} subject lines appear under more than one problem. Intake tagged {mistagged(groups)} of
-  {merged.length} reports with a cause other than their problem.
+  {merged.length} reports with a cause other than their tenant's.
 </p>
 
 <style>
